@@ -220,6 +220,18 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		mScrollEmptyView = doScroll;
 	}
 
+	public final void setSelection(int position) {
+		mRefreshableView.setSelection(position);
+	}
+	
+	public final void setItemChecked(int position, boolean value) {
+		mRefreshableView.setItemChecked(position, value);
+	}
+	
+	public final void setChoiceMode(int choiceMode) {
+		mRefreshableView.setChoiceMode(choiceMode);
+	}
+
 	/**
 	 * Sets whether an indicator graphic should be displayed when the View is in
 	 * a state where a Pull-to-Refresh can happen. An example of this state is
@@ -388,9 +400,13 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			 * now we'll just add one to account for it and rely on the inner
 			 * condition which checks getTop().
 			 */
-			if (mRefreshableView.getFirstVisiblePosition() <= 1) {
+			//if (mRefreshableView.getFirstVisiblePosition() <= 1) {
+			if ((null == mIndicatorIvTop && mRefreshableView.getFirstVisiblePosition() == 0) || 
+				(null != mIndicatorIvTop && mRefreshableView.getFirstVisiblePosition() <= 1)) { 
+				
 				final View firstVisibleChild = mRefreshableView.getChildAt(0);
-				if (firstVisibleChild != null) {
+				//if (firstVisibleChild != null) {
+				if (firstVisibleChild != null && firstVisibleChild != mIndicatorIvTop) { 
 					return firstVisibleChild.getTop() >= mRefreshableView.getTop();
 				}
 			}
@@ -423,10 +439,14 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			 * account for it and rely on the inner condition which checks
 			 * getBottom().
 			 */
-			if (lastVisiblePosition >= lastItemPosition - 1) {
+			//if (lastVisiblePosition >= lastItemPosition - 1) {
+			if ((null == mIndicatorIvBottom && lastVisiblePosition == lastItemPosition) || 
+				(null != mIndicatorIvBottom && lastVisiblePosition >= lastItemPosition - 1)) { 
+				
 				final int childIndex = lastVisiblePosition - mRefreshableView.getFirstVisiblePosition();
 				final View lastVisibleChild = mRefreshableView.getChildAt(childIndex);
-				if (lastVisibleChild != null) {
+				//if (lastVisibleChild != null) {
+				if (lastVisibleChild != null && lastVisibleChild != mIndicatorIvBottom) { 
 					return lastVisibleChild.getBottom() <= mRefreshableView.getBottom();
 				}
 			}
